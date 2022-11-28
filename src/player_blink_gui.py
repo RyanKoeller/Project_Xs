@@ -10,6 +10,7 @@ import threading
 import time
 import tkinter as tk
 import tkinter.filedialog as fd
+import winsound
 from tkinter import ttk
 from os import listdir
 from os.path import isfile, join
@@ -173,7 +174,7 @@ class Application(tk.Frame):
 
         self.s0_1_2_3 = tk.Text(self, width=10, height=4)
         self.s0_1_2_3.grid(column=1,row=2,rowspan=4)
-        
+
         self.s01_23 = tk.Text(self, width=20, height=2)
         self.s01_23.grid(column=1,row=6,rowspan=4)
 
@@ -225,7 +226,7 @@ class Application(tk.Frame):
         self.display_percent.insert(0, 100)
 
         self.after_task()
-     
+
     def increase_advances(self):
         plus = int(self.advances_increase.get())
         self.rng.advance(plus)
@@ -240,7 +241,7 @@ class Application(tk.Frame):
     def save_screenshot(self):
         with fd.asksaveasfile(initialdir="./", filetypes=[("PNG", ".png")]) as f:
             cv2.imwrite(f.name,self.raw_screenshot)
-    
+
     def new_eye(self):
         self.config_json["image"] = "./"+os.path.relpath(fd.askopenfilename(initialdir="./images/", filetypes=[("Image", ".png")])).replace("\\","/")
         self.player_eye = cv2.imread(self.config_json["image"], cv2.IMREAD_GRAYSCALE)
@@ -256,7 +257,7 @@ class Application(tk.Frame):
             b,g,r = split
             image = cv2.merge((r,g,b))
         im = Image.fromarray(image)
-        return ImageTk.PhotoImage(image=im) 
+        return ImageTk.PhotoImage(image=im)
 
     def config_combobox_onchange(self, event=None):
         self.config_json = json.load(open(join("configs",self.config_combobox.get())))
@@ -337,7 +338,7 @@ class Application(tk.Frame):
         else:
             self.tidsid_button['text'] = "TID/SID"
             self.tidsiding = False
-    
+
     def monitoring_work(self):
         self.tracking = False
         blinks, intervals, offset_time = rngtool.tracking_blink(self.player_eye, *self.config_json["view"], MonitorWindow=self.config_json["MonitorWindow"], WindowPrefix=self.config_json["WindowPrefix"], crop=self.config_json["crop"], camera=self.config_json["camera"], tk_window=self, th=self.config_json["thresh"])
@@ -380,13 +381,13 @@ class Application(tk.Frame):
                 print(self.count_down+1)
             else:
                 break
-            
+
             self.advances += self.config_json["npc"]+1
             r = self.rng.getNextRandSequence(self.config_json["npc"]+1)[-1]
             waituntil += 1.018
 
-            print(f"advances:{self.advances}, blinks:{hex(r&0xF)}")        
-            
+            print(f"advances:{self.advances}, blinks:{hex(r&0xF)}")
+
             next_time = waituntil - time.perf_counter() or 0
             time.sleep(next_time)
         if self.timelining:
@@ -403,7 +404,7 @@ class Application(tk.Frame):
             for _ in range(self.config_json["pokemon_npc"]):
                 blink_int = self.rng.rangefloat(3,12) + 0.285
                 heapq.heappush(queue, (waituntil+blink_int,1))
-            
+
             self.count_down = 10
             while queue and self.tracking:
                 self.advances += 1
@@ -411,7 +412,7 @@ class Application(tk.Frame):
                 next_time = w - time.perf_counter() or 0
                 if next_time>0:
                     time.sleep(next_time)
-                
+
                 if self.config_json["advance_delay_2"] != 0:
                     if self.count_down > 0:
                         self.count_down -= 1
@@ -431,6 +432,15 @@ class Application(tk.Frame):
                     heapq.heappush(queue, (w+blink_int, 1))
                     print(f"advances:{self.advances}, interval:{blink_int}")
             self.timelining = False
+            self.alert_user()
+
+    def alert_user():
+        # Beep so the user knows the task is finished
+        frequency = 750  # Set Frequency To 750 Hertz
+        duration = 100  # Set Duration To 100 ms == 0.1 second
+        winsound.Beep(frequency, duration)
+        time.sleep(0.1);
+        winsound.Beep(frequency, duration)
 
     def tidsiding_work(self):
         self.tracking = False
@@ -473,7 +483,7 @@ class Application(tk.Frame):
             next_time = waituntil - time.perf_counter() or 0
             time.sleep(next_time)
 
-    
+
     def reidentifying_work(self):
         self.tracking = False
         state = [int(x,16) for x in self.s0_1_2_3.get(1.0,tk.END).split("\n")[:4]]
@@ -530,13 +540,13 @@ class Application(tk.Frame):
                 print(self.count_down+1)
             else:
                 break
-            
+
             self.advances += self.config_json["npc"]+1
             r = self.rng.getNextRandSequence(self.config_json["npc"]+1)[-1]
             waituntil += 1.018
 
-            print(f"advances:{self.advances}, blinks:{hex(r&0xF)}")        
-            
+            print(f"advances:{self.advances}, blinks:{hex(r&0xF)}")
+
             next_time = waituntil - time.perf_counter() or 0
             time.sleep(next_time)
         if self.timelining:
@@ -553,7 +563,7 @@ class Application(tk.Frame):
             for _ in range(self.config_json["pokemon_npc"]):
                 blink_int = self.rng.rangefloat(3,12) + 0.285
                 heapq.heappush(queue, (waituntil+blink_int,1))
-            
+
             self.count_down = 10
             while queue and self.tracking:
                 self.advances += 1
@@ -561,7 +571,7 @@ class Application(tk.Frame):
                 next_time = w - time.perf_counter() or 0
                 if next_time>0:
                     time.sleep(next_time)
-                
+
                 if self.config_json["advance_delay_2"] != 0:
                     if self.count_down > 0:
                         self.count_down -= 1
@@ -581,6 +591,7 @@ class Application(tk.Frame):
                     heapq.heappush(queue, (w+blink_int, 1))
                     print(f"advances:{self.advances}, interval:{blink_int}")
             self.timelining = False
+            self.alert_user()
 
     def preview(self):
         if not self.previewing:
@@ -592,7 +603,7 @@ class Application(tk.Frame):
         else:
             self.preview_button['text'] = "Preview"
             self.previewing = False
-    
+
     def previewing_work(self):
         last_frame_tk = None
         last_camera = self.config_json["camera"]
