@@ -1,5 +1,5 @@
 """GUI Application for blink detection and seed identification"""
-import winsound
+
 
 
 try:
@@ -17,6 +17,7 @@ try:
     import time
     import tkinter as tk
     import tkinter.filedialog as fd
+    import winsound
     from pyautogui import press
     from tkinter import ttk
     from os import listdir
@@ -464,8 +465,10 @@ class PlayerBlinkGUI(tk.Frame):
         try:
             self.rng = rngtool.recov(blinks, intervals, npc=self.config_json["npc"])
         except AssertionError as failed_deduction:
+            self.alert_user()
             raise Exception("Failed to deduce seed from monitored blinks.") from failed_deduction
 
+        self.alert_user()
         self.monitor_blink_button['text'] = "Monitor Blinks"
         self.monitoring = False
         self.preview()
@@ -560,18 +563,16 @@ class PlayerBlinkGUI(tk.Frame):
                     heapq.heappush(queue, (wait+rand, 1))
                     print(f"advances:{self.advances}, interval:{rand}")
             self.timelining = False
-            self.alert_user()
 
     def alert_user(self):
         # Beep so the user knows the task is finished
         frequency = 750  # Set Frequency To 750 Hertz
         duration = 100  # Set Duration To 100 ms == 0.1 second
-        for i in range(3):
-            winsound.Beep(frequency, duration)
-            time.sleep(0.1)
-            winsound.Beep(frequency, duration)
-            time.sleep(0.1)
-            winsound.Beep(frequency, duration)
+        winsound.Beep(frequency, duration)
+        time.sleep(0.1)
+        winsound.Beep(frequency, duration)
+        time.sleep(0.1)
+        winsound.Beep(frequency, duration)
 
     def tidsiding_work(self):
         """Thread work to be done for the tidsid function"""
@@ -700,9 +701,11 @@ class PlayerBlinkGUI(tk.Frame):
                                                               search_max= \
                                                                   int(self.reident_max.get()))
             except TypeError as failed_deduction:
+                self.alert_user()
                 raise Exception("Failed to reidentify from the recorded blinks.") \
                     from failed_deduction
 
+        self.alert_user()
         self.reidentify_button['text'] = "Reidentify"
         self.reidentifying = False
         self.preview()
@@ -789,7 +792,6 @@ class PlayerBlinkGUI(tk.Frame):
                     heapq.heappush(queue, (wait+rand, 1))
                     print(f"advances:{self.advances}, interval:{rand}")
             self.timelining = False
-            self.alert_user()
 
     def preview(self):
         """Start preview to be used to correct settings"""
