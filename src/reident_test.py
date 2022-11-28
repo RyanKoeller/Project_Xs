@@ -36,7 +36,7 @@ possible_length = int(reident_time*4//3)
 possible = []
 rng = Xorshift(*seed)
 rng.next()
-blink_rands = [int((r&0b1110)==0) for r in rng.getNextRandSequence(max_advance)]
+blink_rands = [int((r&0b1110)==0) for r in rng.get_next_rand_sequence(max_advance)]
 # loop through all possible advances
 for adv in range(max_advance-possible_length):
     # slice blink_rands to only give only the random values that could happen since this advance during reidentification 

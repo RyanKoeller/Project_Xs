@@ -8,13 +8,13 @@ def reidentify():
     state = [t0 >> 64, t0 & 0xFFFFFFFF, t1 >> 64, t1 & 0xFFFFFFFF]
 
     observed_blinks, _, offset_time = rngtool.tracking_blink_manual(size = 20, reidentify=True)
-    reidentified_rng = rngtool.reidentifyByBlinks(Xorshift(*state), observed_blinks)
+    reidentified_rng = rngtool.reidentiy_by_blinks(Xorshift(*state), observed_blinks)
     
     waituntil = time.perf_counter()
     diff = round(waituntil-offset_time)+1
-    reidentified_rng.getNextRandSequence(diff)
+    reidentified_rng.get_next_rand_sequence(diff)
 
-    state = reidentified_rng.getState()
+    state = reidentified_rng.get_state()
     print(hex(state[0]<<32|state[1]), hex(state[2]<<32|state[3]))
 
     advances = 0
@@ -36,9 +36,9 @@ def expr():
 
     waituntil = time.perf_counter()
     diff = round(waituntil-offset_time)
-    prng.getNextRandSequence(diff)
+    prng.get_next_rand_sequence(diff)
 
-    state = prng.getState()
+    state = prng.get_state()
     print(hex(state[0]<<32|state[1]), hex(state[2]<<32|state[3]))
 
     advances = 0

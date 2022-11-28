@@ -1,91 +1,90 @@
-class Xorshift(object):
-    def __init__(self,s0,s1,s2,s3):
-        self.x = s0
-        self.y = s1
-        self.z = s2
-        self.w = s3
+"""Xorshift Random Number Generator"""
+class Xorshift:
+    """Xorshift Random Number Generator"""
+    def __init__(self,seed_0,seed_1,seed_2,seed_3):
+        self.seed_0 = seed_0
+        self.seed_1 = seed_1
+        self.seed_2 = seed_2
+        self.seed_3 = seed_3
 
     def next(self):
-        s0 = self.x
-        s1 = self.y
-        s2 = self.z
-        s3 = self.w
+        """Generate the next random number"""
+        temp = self.seed_0 ^ self.seed_0 << 11 & 0xFFFFFFFF
+        self.seed_0 = self.seed_1
+        self.seed_1 = self.seed_2
+        self.seed_2 = self.seed_3
+        self.seed_3 = temp ^ temp >> 8 ^ self.seed_3 ^ self.seed_3 >> 19
 
-        t = s0 ^ s0 << 11 & 0xFFFFFFFF
-        self.x = s1
-        self.y = s2
-        self.z = s3
-        self.w = t ^ t >> 8 ^ s3 ^ s3 >> 19
-
-        return self.w
+        return self.seed_3
 
     def prev(self):
-        s0 = self.x
-        s1 = self.y
-        s2 = self.z
-        s3 = self.w
+        """Generate the previous random number"""
+        temp = self.seed_2 >> 19 ^ self.seed_2 ^ self.seed_3
+        temp ^= temp >> 8
+        temp ^= temp >> 16
 
-        t = s2 >> 19 ^ s2 ^ s3
-        t ^= t >> 8
-        t ^= t >> 16
-        
-        t ^= t << 11 & 0xFFFFFFFF
-        t ^= t << 22 & 0xFFFFFFFF
+        temp ^= temp << 11 & 0xFFFFFFFF
+        temp ^= temp << 22 & 0xFFFFFFFF
 
-        self.x = t
-        self.y = s0
-        self.z = s1
-        self.w = s2
+        self.seed_0 = temp
+        self.seed_1 = self.seed_0
+        self.seed_2 = self.seed_1
+        self.seed_3 = self.seed_2
 
-        return self.w
+        return self.seed_3
 
     def advance(self,length:int):
-        self.getNextRandSequence(length)
+        """Skip advances of length"""
+        self.get_next_rand_sequence(length)
 
-    def range(self,mi:int,ma:int)->int:
-        """generate random integer value in [mi,ma)
+    def range(self,minimum:int,maximum:int)->int:
+        """Generate random integer in range [minimum,maximum)
 
         Args:
-            mi ([int]): minimum
-            ma ([int]): maximam
+            minimum ([int]): minimum
+            maximum ([int]): maximam
 
         Returns:
-            [int]: random integer value
+            int: random integer
         """
-        return self.next() % (ma-mi) + min
+        return self.next() % (maximum-minimum) + minimum
 
-    def float(self)->float:
-        """generate random value in [0,1]
+    def randfloat(self)->float:
+        """Generate random float in range [0,1]
 
         Returns:
-            float: random value
+            float: random float
         """
         return (self.next() & 0x7fffff) / 8388607.0
 
-    def rangefloat(self,mi:float,ma:float)->float:
-        """generate random value in [mi,ma]
+    def rangefloat(self,minimum:float,maximum:float)->float:
+        """Generate random float in range [minimum,maximum]
 
         Args:
-            mi (float): minimum
-            ma (float): maximam
+            minimum (float): minimum
+            maximum (float): maximam
 
         Returns:
-            [type]: [description]
+            float: random float
         """
-        t = self.float()
-        return t * mi + (1-t) * ma
+        temp = self.randfloat()
+        return temp * minimum + (1-temp) * maximum
 
-    def getNextRandSequence(self,length):
+    def get_next_rand_sequence(self,length):
+        """Generate a the next random sequence of length"""
         return [self.next() for _ in range(length)]
 
-    def getPrevRandSequence(self,length):
+    def get_prev_rand_sequence(self,length):
+        """Generate the previous random sequence of length"""
         return [self.prev() for _ in range(length)]
 
-    def getState(self):
-        return [self.x, self.y, self.z, self.w]
+    def get_state(self):
+        """Get the state of the RNG"""
+        return [self.seed_0, self.seed_1, self.seed_2, self.seed_3]
 
-    def setState(self, s0, s1, s2, s3):
-        self.x = s0
-        self.y = s1
-        self.z = s2
-        self.w = s3
+    def set_state(self, seed_0, seed_1, seed_2, seed_3):
+        """Set state of the RNG"""
+        self.seed_0 = seed_0
+        self.seed_1 = seed_1
+        self.seed_2 = seed_2
+        self.seed_3 = seed_3

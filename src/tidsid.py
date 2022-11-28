@@ -33,14 +33,14 @@ def expr():
     if munch_eye is None:
         print("path is wrong")
         return
-    gombe_intervals = rngtool.tracking_poke_blink(munch_eye, *config["view"], size=64, MonitorWindow=config["MonitorWindow"], WindowPrefix=config["WindowPrefix"])
+    gombe_intervals = rngtool.tracking_poke_blink(munch_eye, *config["view"], size=64, monitor_window=config["MonitorWindow"], window_prefix=config["WindowPrefix"])
 
-    interval_prng = rngtool.recovByMunchlax(gombe_intervals)
-    state = interval_prng.getState()
+    interval_prng = rngtool.recov_by_munchlax(gombe_intervals)
+    state = interval_prng.get_state()
 
     #timecounter reset
     advances = 0
-    id_prng = Xorshift(*interval_prng.getState())
+    id_prng = Xorshift(*interval_prng.get_state())
     id_prng.next()
     
     waituntil = time.perf_counter()
@@ -83,7 +83,7 @@ def test():
             print(f"backwarding {i},", hex(tid),hex(sid))
             break
     
-    randlist = prng.getPrevRandSequence(100)
+    randlist = prng.get_prev_rand_sequence(100)
     expected_intervals = [randrange(r,100.0,370.0)/30.0 for r in randlist]
     
     print(f"observed:{gombe_intervals[::-1]}")
@@ -92,7 +92,7 @@ def test():
 def main():
     blinks, intervals, offset = rngtool.tracking_blink()
     prng = rngtool.recov(blinks,intervals)
-    print(f"state:{prng.getState()}")
+    print(f"state:{prng.get_state()}")
     print("input trainer ID")
     playerid = int(input())
 
@@ -103,7 +103,7 @@ def main():
         if g7tid==playerid:
             print(f"backwarding {i},", hex(tid),hex(sid))
             break
-    randlist = prng.getPrevRandSequence(100)
+    randlist = prng.get_prev_rand_sequence(100)
     expected_intervals = [randrange(r,100.0,370.0)/30.0 for r in randlist]
     
     print(f"expected:{expected_intervals}")

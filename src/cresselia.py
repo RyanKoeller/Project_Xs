@@ -22,9 +22,9 @@ def firstspecify():
 
     waituntil = time.perf_counter()
     diff = round(waituntil-offset_time)
-    prng.getNextRandSequence(diff)
+    prng.get_next_rand_sequence(diff)
 
-    state = prng.getState()
+    state = prng.get_state()
     print("state(64bit 64bit)")
     print(hex(state[0]<<32|state[1]), hex(state[2]<<32|state[3]))
     print("state(32bit 32bit 32bit 32bit)")
@@ -42,7 +42,7 @@ def reidentify():
     pkroi = (805, 475, 20, 30)
     blinks, observed_intervals, offset_time = rngtool.simultaneous_tracking(plimg, plroi, pkimg, pkroi, pkth = 0.999185, size = 8)
 
-    reidentified_rng = rngtool.reidentifyByIntervals(Xorshift(*state), observed_intervals, th=2, search_max=10**5)
+    reidentified_rng = rngtool.reidentiy_by_intervals(Xorshift(*state), observed_intervals, threshold=2, search_max=10**5)
     if reidentified_rng is None:
         print("couldn't reidentify state.")
         return
@@ -52,7 +52,7 @@ def reidentify():
     print(diff, waituntil-offset_time)
     reidentified_rng.advances(max(diff,0))
 
-    state = reidentified_rng.getState()
+    state = reidentified_rng.get_state()
     print("state(64bit 64bit)")
     print(hex(state[0]<<32|state[1]), hex(state[2]<<32|state[3]))
     print("state(32bit 32bit 32bit 32bit)")
@@ -86,7 +86,7 @@ def reidentifyInSecretBase():
         print("path is wrong")
         return
     blinks, observed_intervals, offset_time = rngtool.tracking_blink(player_eye, 870, 680, 85, 90, size=7)
-    reidentified_rng = rngtool.reidentifyByIntervals(Xorshift(*state), observed_intervals, npc=0)
+    reidentified_rng = rngtool.reidentiy_by_intervals(Xorshift(*state), observed_intervals, npc=0)
     if reidentified_rng is None:
         print("couldn't reidentify state.")
         return
@@ -96,7 +96,7 @@ def reidentifyInSecretBase():
     print(diff, waituntil-offset_time)
     reidentified_rng.advances(max(diff,0))
 
-    state = reidentified_rng.getState()
+    state = reidentified_rng.get_state()
     print("state(64bit 64bit)")
     print(hex(state[0]<<32|state[1]), hex(state[2]<<32|state[3]))
     print("state(32bit 32bit 32bit 32bit)")
@@ -128,7 +128,7 @@ def cresselia_timeline():
     pkroi = (805, 475, 20, 30)
     blinks, observed_intervals, offset_time = rngtool.simultaneous_tracking(plimg, plroi, pkimg, pkroi, pkth = 0.999185, size = 4)
 
-    reidentified_rng = rngtool.reidentifyByIntervals(Xorshift(*state), observed_intervals, th=1, search_max=1*10**3, search_min=0)
+    reidentified_rng = rngtool.reidentiy_by_intervals(Xorshift(*state), observed_intervals, threshold=1, search_max=1*10**3, search_min=0)
     if reidentified_rng is None:
         print("couldn't reidentify state.")
         return
@@ -138,7 +138,7 @@ def cresselia_timeline():
     print(diff, waituntil-offset_time)
     reidentified_rng.advances(max(diff,0))
 
-    state = reidentified_rng.getState()
+    state = reidentified_rng.get_state()
     print("state(64bit 64bit)")
     print(hex(state[0]<<32|state[1]), hex(state[2]<<32|state[3]))
     print("state(32bit 32bit 32bit 32bit)")

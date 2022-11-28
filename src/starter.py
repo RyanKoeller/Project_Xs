@@ -16,9 +16,9 @@ def firstspecify():
 
     waituntil = time.perf_counter()
     diff = round(waituntil-offset_time)
-    prng.getNextRandSequence(diff)
+    prng.get_next_rand_sequence(diff)
 
-    state = prng.getState()
+    state = prng.get_state()
     print("state(64bit 64bit)")
     print(hex(state[0]<<32|state[1]), hex(state[2]<<32|state[3]))
     print("state(32bit 32bit 32bit 32bit)")
@@ -35,7 +35,7 @@ def reidentify():
         return
 
     observed_blinks, _, offset_time = rngtool.tracking_blink(player_eye, 1065, 490, 30, 35,size=20)
-    reidentified_rng = rngtool.reidentifyByBlinks(Xorshift(*state), observed_blinks,npc=1)
+    reidentified_rng = rngtool.reidentiy_by_blinks(Xorshift(*state), observed_blinks,npc=1)
     if reidentified_rng is None:
         print("couldn't reidentify state.")
         return
@@ -45,7 +45,7 @@ def reidentify():
     print(diff, waituntil-offset_time)
     reidentified_rng.advances(max(diff,0)*2)
 
-    state = reidentified_rng.getState()
+    state = reidentified_rng.get_state()
     print("state(64bit 64bit)")
     print(hex(state[0]<<32|state[1]), hex(state[2]<<32|state[3]))
     print("state(32bit 32bit 32bit 32bit)")
@@ -81,7 +81,7 @@ def starter_timeline():
         return
 
     observed_blinks, _, offset_time = rngtool.tracking_blink(player_eye, 1065, 490, 30, 35,size=20)
-    reidentified_rng = rngtool.reidentifyByBlinks(Xorshift(*state), observed_blinks,npc=1)
+    reidentified_rng = rngtool.reidentiy_by_blinks(Xorshift(*state), observed_blinks,npc=1)
     if reidentified_rng is None:
         print("couldn't reidentify state.")
         return
@@ -91,7 +91,7 @@ def starter_timeline():
     print(waituntil-offset_time)
     reidentified_rng.advances(max(diff,0)*2)
 
-    state = reidentified_rng.getState()
+    state = reidentified_rng.get_state()
     print("state(64bit 64bit)")
     print(hex(state[0]<<32|state[1]), hex(state[2]<<32|state[3]))
     print("state(32bit 32bit 32bit 32bit)")

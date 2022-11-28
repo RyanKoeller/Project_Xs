@@ -1,18 +1,18 @@
 {
     "MonitorWindow": true,
     "WindowPrefix": "SysDVR-Client [PID ",
-    "image": "./images/cresselia/eye.png",
+    "image": "./images/bebe/eye2.png",
     "view": [
-        617,
-        330,
-        24,
-        31
+        501,
+        366,
+        27,
+        30
     ],
-    "thresh": 0.65,
+    "thresh": 0.9,
     "white_delay": 0.0,
     "advance_delay": 0,
     "advance_delay_2": 0,
-    "npc": 0,
+    "npc": 1,
     "timeline_npc": 0,
     "pokemon_npc": 0,
     "crop": [

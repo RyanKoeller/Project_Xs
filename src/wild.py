@@ -11,14 +11,14 @@ def expr():
     if player_eye is None:
         print("path is wrong")
         return
-    blinks, intervals, offset_time = rngtool.tracking_blink(player_eye, *config["view"], MonitorWindow=config["MonitorWindow"], WindowPrefix=config["WindowPrefix"], crop=config["crop"],camera=config["camera"])
+    blinks, intervals, offset_time = rngtool.tracking_blink(player_eye, *config["view"], monitor_window=config["MonitorWindow"], window_prefix=config["WindowPrefix"], crop=config["crop"],camera=config["camera"])
     prng = rngtool.recov(blinks, intervals)
 
     waituntil = time.perf_counter()
     diff = round(waituntil-offset_time)
-    prng.getNextRandSequence(diff)
+    prng.get_next_rand_sequence(diff)
 
-    state = prng.getState()
+    state = prng.get_state()
     print("state(64bit 64bit)")
     print(hex(state[0]<<32|state[1]), hex(state[2]<<32|state[3]))
     print("state(32bit 32bit 32bit 32bit)")
@@ -44,14 +44,14 @@ def reidentify():
         print("path is wrong")
         return
 
-    observed_blinks, _, offset_time = rngtool.tracking_blink(player_eye, *config["view"], MonitorWindow=config["MonitorWindow"], WindowPrefix=config["WindowPrefix"], crop=config["crop"],camera=config["camera"], size=20)
-    reidentified_rng = rngtool.reidentifyByBlinks(Xorshift(*state), observed_blinks)
+    observed_blinks, _, offset_time = rngtool.tracking_blink(player_eye, *config["view"], monitor_window=config["MonitorWindow"], window_prefix=config["WindowPrefix"], crop=config["crop"],camera=config["camera"], size=20)
+    reidentified_rng = rngtool.reidentiy_by_blinks(Xorshift(*state), observed_blinks)
     
     waituntil = time.perf_counter()
     diff = int(-(-(waituntil-offset_time)//1))
     reidentified_rng.advance(max(diff,0))
 
-    state = reidentified_rng.getState()
+    state = reidentified_rng.get_state()
     print("state(64bit 64bit)")
     print(hex(state[0]<<32|state[1]), hex(state[2]<<32|state[3]))
     print("state(32bit 32bit 32bit 32bit)")
