@@ -568,9 +568,9 @@ class PlayerBlinkGUI(tk.Frame):
         duration = 100  # Set Duration To 100 ms == 0.1 second
         for i in range(3):
             winsound.Beep(frequency, duration)
-            time.sleep(0.1);
+            time.sleep(0.1)
             winsound.Beep(frequency, duration)
-            time.sleep(0.1);
+            time.sleep(0.1)
             winsound.Beep(frequency, duration)
 
     def tidsiding_work(self):
